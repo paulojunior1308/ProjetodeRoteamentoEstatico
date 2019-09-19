@@ -1,0 +1,26 @@
+enable
+configure terminal
+hostname SW-01
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS!"
+enable secret SenhadaEnable
+line console 0
+password SenhadaConsole
+login
+exit
+service password-encryption
+ip domain-name rede1.local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5 
+exit
+interface vlan 1
+ip address 192.168.1.30 255.255.255.252
+description "REDE 1 192.168.1.0/27"
+no shutdown
+exit
+ip default-gateway 192.168.1.1
+do wr

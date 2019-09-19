@@ -1,0 +1,46 @@
+enable
+configure terminal 
+hostname RT-03
+enable secret SenhadaEnable
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+line console 0
+password SenhadaConsole
+login
+exit
+ip domain-name rede3.local
+crypto key generate rsa general-keys modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+security passwords min-length 8
+service password-encryption 
+interface gigabitEthernet 0/0
+ip address 192.168.0.1 255.255.255.128
+description "REDE 3 192.168.0.0/25"
+no shutdown 
+exit
+interface serial 0/0/0
+ip address 200.200.100.6 255.255.255.252
+description REDE EXTERNA 200.200.100.4
+no shutdown
+exit
+interface serial 0/0/1
+ip address 200.200.100.9 255.255.255.252
+description REDE EXTERNA 200.200.100.8/30
+no shutdown
+exit
+ip route 200.200.100.0 255.255.255.252 200.200.100.5
+ip route 200.200.100.0 255.255.255.252 200.200.100.10
+ip route 200.200.100.12 255.255.255.252 200.200.100.5
+ip route 200.200.100.12 255.255.255.252 200.200.100.10
+ip route 10.40.16.0 255.255.240.0 200.200.100.10
+ip route 10.40.16.0 255.255.240.0 200.200.100.5
+ip route 192.168.1.0 255.255.255.224 200.200.100.5
+ip route 192.168.1.0 255.255.255.224 200.200.100.10
+ip route 172.16.42.0 255.255.254.0 200.200.100.10
+ip route 172.16.42.0 255.255.254.0 200.200.100.5
+do wr

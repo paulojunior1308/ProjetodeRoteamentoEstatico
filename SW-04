@@ -1,0 +1,26 @@
+enable
+configure terminal
+hostname SW-04
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS!"
+enable secret SenhadaEnable
+line console 0
+password SenhadaConsole
+login
+exit
+service password-encryption
+ip domain-name rede4.local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5 
+exit
+interface vlan 1
+ip address 172.16.43.254 255.255.254.0
+description "REDE 4 172.16.42.0/23"
+no shutdown
+exit
+ip default-gateway 172.16.42.1
+do wr

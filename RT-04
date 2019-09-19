@@ -1,0 +1,46 @@
+enable
+configure terminal 
+hostname RT-04
+enable secret SenhadaEnable
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+line console 0
+password SenhadaConsole
+login
+exit
+ip domain-name rede4.local
+crypto key generate rsa general-keys modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+security passwords min-length 8
+service password-encryption 
+interface gigabitEthernet 0/0
+ip address 172.16.42.1 255.255.254.0
+description "REDE 4 172.16.42.0/23"
+no shutdown 
+exit
+interface serial 0/0/0
+ip address 200.200.100.13 255.255.255.252
+description REDE EXTERNA 200.200.100.12/30
+no shutdown
+exit
+interface serial 0/0/1
+ip address 200.200.100.10 255.255.255.252
+description REDE EXTERNA 200.200.100.8/30
+no shutdown
+exit
+ip route 200.200.100.0 255.255.255.252 200.200.100.14
+ip route 200.200.100.0 255.255.255.252 200.200.100.9
+ip route 200.200.100.4 255.255.255.252 200.200.100.9
+ip route 200.200.100.4 255.255.255.252 200.200.100.14
+ip route 10.40.16.0 255.255.240.0 200.200.100.14
+ip route 10.40.16.0 255.255.240.0 200.200.100.9
+ip route 192.168.1.0 255.255.255.224 200.200.100.14
+ip route 192.168.1.0 255.255.255.224 200.200.100.9
+ip route 192.168.0.0 255.255.255.128 200.200.100.14
+ip route 192.168.0.0 255.255.255.128 200.200.100.9
+do wr
